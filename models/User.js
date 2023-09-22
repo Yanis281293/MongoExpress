@@ -1,43 +1,40 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
-const passportLocalMangoose = require('passport-local-mongoose');
+const passportLocalMongoose = require('passport-local-mongoose');
+const Schema = mongoose.Schema;
 
-// Création du schéma de données
 const UserSchema = new Schema({
     username: {
-        String,
+        type: String,
         required: true,
-        minlength: [3, 'Le username doit comporter au moins 3 lettres'],
-        maxlength: [30, 'Le username ne doit pas dépasser 30 lettres'],
-    } ,
-    email: {
-        String,
-        required: true,
-        unique: true,
-        match: [/\S+@\S+\.\S+/, 'L\'email est invalide.'] // regex pour valider le format de l'email
+        minlength: [5, 'Le nom d\'utilisateur doit comporter au moins 5 caractères.'],
+        maxlength: [30, 'Le nom d\'utilisateur ne doit pas dépasser 30 caractères.']
     },
     password: {
-        String,
+        type: String,
         required: true,
-        minlength: [8, 'Le mot de passe doit comporter au moins 8 caractères'],
+        minlength: [8, 'Le mot de passe doit comporter au moins 8 caractères.']
+    },
+    email: {
+        type: String,
+        unique: true,
+        required: true,
+        match: [/\S+@\S+\.\S+/, 'L\'email est invalide.'] // Regex pour valider le format de l'email
     },
     role: {
-        String,
+        type: String,
         enum: {
-            values: ['admin', 'user'],
-            message: 'Le rôle est invalide',
+            values: ['user', 'admin'],
+            message: 'Le rôle est invalide.'
         },
-        default: 'user',
-    },
-    createdAt: Date,
-    updatedAt: Date,
-})
+        default: 'user'
+    }
+});
 
-// Initialisation du plugin passport-local-mongoose qui va nous permettre de gérer l'authentification
+// Intégration de passport-local-mongoose qui sert à gérer les utilisateurs
 UserSchema.plugin(passportLocalMongoose);
 
-// Création du modèle user à partie du schéma UserSchema
-const User = mongoose.model('User', UserShema)
+// Création du modèle User basé sur le schéma défini précédemment
+const User = mongoose.model('User', UserSchema);
 
-// Exportation du modèle User vers les autres fichiers
+// Exportation du modèle User pour l'utiliser dans d'autres fichiers
 module.exports = User;

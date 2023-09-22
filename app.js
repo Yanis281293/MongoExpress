@@ -4,16 +4,16 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const passport = require('passport');
-const LocalStrategy = require('passeport-local').strategy;
+const LocalStrategy  = require('passport-local').Strategy;
 const session = require('express-session');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
-// Import des modèles
+//import des modèles
 const User = require('./models/User');
 
-const {initDB} = require('./config/database')
+const { initDB } = require('./config/database');
 
 const app = express();
 
@@ -37,6 +37,7 @@ passport.use(new LocalStrategy(User.authenticate()));
 // Serialisation et deserialisation de l'utilisateur. C'est une étape obligatoire pour utiliser les sessions avec passport. C'est à dire que passport va lire les infos de session et les encoder/decoder
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
